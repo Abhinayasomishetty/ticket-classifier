@@ -1,4 +1,3 @@
-
 # Embedding service using HuggingFace models.
 # Loads model once and reuses for all embedding operations.
 from typing import List
@@ -18,16 +17,16 @@ _embedder: HuggingFaceEmbedding = None
 def get_embedder() -> HuggingFaceEmbedding:
     """Get or create the embedding model singleton."""
     global _embedder
-    
+
     if _embedder is None:
         print(f"Loading embedding model: {settings.EMBEDDING_MODEL}...")
         _embedder = HuggingFaceEmbedding(
             model_name=settings.EMBEDDING_MODEL,
             cache_folder="./models/embeddings",
-            embed_batch_size=32
+            embed_batch_size=32,
         )
         print("Embedding model loaded successfully!")
-    
+
     return _embedder
 
 

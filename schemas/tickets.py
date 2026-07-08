@@ -1,8 +1,8 @@
 from datetime import datetime
-from typing import Optional,Any,List,Dict
+from typing import Optional, Any, List, Dict
 from pydantic import BaseModel, Field
 from db.models import TicketCategory, TicketPriority, TicketStatus
-from uuid import UUID 
+from uuid import UUID
 
 
 class TicketCreate(BaseModel):
@@ -27,9 +27,10 @@ class TicketResponse(BaseModel):
     relevant_documents: Optional[Any] = None
     knowledge_summary: Optional[str] = None
     log_analysis: Optional[str] = None
-    
+
     class Config:
         from_attributes = True
+
 
 class TicketListResponse(BaseModel):
     # Schema for list of tickets.

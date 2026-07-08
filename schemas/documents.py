@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 from db.models import DocumentType, DocumentStatus
 from uuid import UUID
 
+
 class DocumentUploadResponse(BaseModel):
     # Response after uploading a document.
     id: UUID
@@ -12,9 +13,10 @@ class DocumentUploadResponse(BaseModel):
     file_size: int
     status: DocumentStatus
     uploaded_at: datetime
-    
+
     class Config:
         from_attributes = True
+
 
 class DocumentResponse(BaseModel):
     # Full document response.
@@ -30,14 +32,16 @@ class DocumentResponse(BaseModel):
     error_message: Optional[str] = None
     uploaded_at: datetime
     processed_at: Optional[datetime] = None
-    
+
     class Config:
         from_attributes = True
+
 
 class DocumentListResponse(BaseModel):
     # Response for document list.
     documents: List[DocumentResponse]
     total: int
+
 
 class KnowledgeSearchResponse(BaseModel):
     # Response for knowledge base search.
@@ -46,6 +50,7 @@ class KnowledgeSearchResponse(BaseModel):
     doc_count: int
     retrieved_documents: List[Dict[str, Any]] = []
     error: Optional[bool] = None
+
 
 class CollectionStatsResponse(BaseModel):
     # Response for collection statistics.

@@ -88,8 +88,6 @@ Priority rules:
 
 
 async def classify_ticket(title: str, description: str) -> dict:
-    
-
     """
     Classify a ticket using local Llama-3 via Ollama.
     description:str)->dict:
@@ -97,7 +95,7 @@ async def classify_ticket(title: str, description: str) -> dict:
         dict with category, priority, confidence_score, reasoning
     """
     prompt = CLASSIFICATION_PROMPT.format(title=title, description=description)
-    
+
     async with httpx.AsyncClient(timeout=120.0) as client:
         try:
             response = await client.post(
@@ -109,65 +107,66 @@ async def classify_ticket(title: str, description: str) -> dict:
                     "options": {
                         "temperature": 0,  # Low temp for consistent classification
                         "top_p": 0.8,
-                        "num_predict":120
-                    }
-                }
+                        "num_predict": 120,
+                    },
+                },
             )
 
-            result=response.json()
-            raw_response=result.get("response","")
+            result = response.json()
+            raw_response = result.get("response", "")
 
-# Parse the JSON from the response
+            # Parse the JSON from the response
             return parse_classification_response(raw_response)
         except httpx.HTTPError as e:
             print("FULL ERROR TYPE=", type(e))
-            print("FULL ERROR REPR=",repr(e))
+            print("FULL ERROR REPR=", repr(e))
             raise
             return get_fallback_classification()
         except json.JSONDecodeError as e:
             print("JSON parse error:", e)
             return get_fallback_classification()
         except Exception as e:
-            print("UNEXPECTED ERROR=",repr(e))
+            print("UNEXPECTED ERROR=", repr(e))
             return get_fallback_classification()
 
+
 def parse_classification_response(raw_response: str) -> dict:
-    
+
     # Try to extract JSON from the response
     # Sometimes LLMs add markdown code blocks
     clean_response = raw_response.strip()
-    
+
     if "```json" in clean_response:
         clean_response = clean_response.split("```json")[1].split("```")[0]
     elif "```" in clean_response:
         clean_response = clean_response.split("```")[1].split("```")[0]
-    
+
     data = json.loads(clean_response)
-    
+
     # Validate and normalize
     try:
         category = TicketCategory(data["category"].lower())
     except (KeyError, ValueError):
         category = TicketCategory.OTHER
-    
+
     try:
         priority = TicketPriority(data["priority"].lower())
     except (KeyError, ValueError):
         priority = TicketPriority.MEDIUM
-    
+
     return {
         "category": category,
         "priority": priority,
         "confidence_score": data.get("confidence_score", "0.5"),
-        "reasoning": data.get("reasoning", "Classification completed")
+        "reasoning": data.get("reasoning", "Classification completed"),
     }
 
 
 def get_fallback_classification() -> dict:
-    
+
     return {
         "category": TicketCategory.OTHER,
         "priority": TicketPriority.MEDIUM,
         "confidence_score": "0.0",
-        "reasoning": "Classification failed - using default values"
+        "reasoning": "Classification failed - using default values",
     }

@@ -6,6 +6,7 @@ from sqlalchemy.orm import relationship
 from db.database import Base
 import enum
 
+
 class TicketCategory(str, enum.Enum):
     BUG = "bug"
     FEATURE_REQUEST = "feature_request"
@@ -27,6 +28,7 @@ class TicketStatus(str, enum.Enum):
     RESOLVED = "resolved"
     CLOSED = "closed"
 
+
 class DocumentStatus(str, enum.Enum):
     PENDING = "pending"
     PROCESSING = "processing"
@@ -39,20 +41,22 @@ class DocumentType(str, enum.Enum):
     DOCX = "docx"
     TXT = "txt"
 
+
 class ExecutionStatus(str, enum.Enum):
     RUNNING = "running"
     SUCCESS = "success"
     ERROR = "error"
 
+
 class User(Base):
     __tablename__ = "users"
-    
+
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email = Column(String(255), unique=True, nullable=False, index=True)
     username = Column(String(100), unique=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
-    
+
     # Relationship
     tickets = relationship("Ticket", back_populates="created_by")
     documents = relationship("Document", back_populates="uploaded_by")
@@ -60,32 +64,30 @@ class User(Base):
 
 class Ticket(Base):
     __tablename__ = "tickets"
-    
+
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title = Column(String(255), nullable=False)
     description = Column(Text, nullable=False)
-    
+
     # Classification fields (populated by Llama-3)
     category = Column(Enum(TicketCategory), nullable=True)
     priority = Column(Enum(TicketPriority), nullable=True)
     confidence_score = Column(String(10), nullable=True)  # e.g., "0.85"
     classification_reasoning = Column(Text, nullable=True)
-    
+
     # Metadata
     status = Column(Enum(TicketStatus), default=TicketStatus.OPEN)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
+
     # Relationship
     created_by = relationship("User", back_populates="tickets")
 
-    
-    
+
 class Document(Base):
     __tablename__ = "documents"
 
-    
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     filename = Column(String(255), nullable=False)
     original_filename = Column(String(255), nullable=False)
@@ -108,6 +110,7 @@ class Document(Base):
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     uploaded_by = relationship("User", back_populates="documents")
 
+
 class AgentExecution(Base):
     __tablename__ = "agent_executions"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -119,7 +122,7 @@ class AgentExecution(Base):
     duration_ms = Column(Integer, nullable=True)
     error_message = Column(Text, nullable=True)
     timestamp = Column(DateTime, default=datetime.utcnow)
-    
+
     ticket = relationship("Ticket", backref="agent_executions")
 
 
