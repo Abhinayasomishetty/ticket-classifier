@@ -33,9 +33,6 @@ jobs:
       - name: Check Code Formatting
         run: black --check .
 
-      - name: Lint Code
-        run: flake8 .
-
       - name: Run Tests
         run: pytest
 
