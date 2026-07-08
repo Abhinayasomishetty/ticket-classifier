@@ -1,0 +1,14 @@
+venv/
+venv311/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+.git
+.gitignore
+chroma_db/
+data/documents/
+models/embeddings/
+frontend/

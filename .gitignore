@@ -1,0 +1,45 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+.coverage
+
+# Virtual Environments
+venv/
+venv311/
+env/
+.venv/
+
+# Environment Variables
+.env
+
+# VS Code
+.vscode/
+
+# ChromaDB
+chroma_db/
+
+# Uploaded Documents
+data/documents/
+
+# Logs
+*.log
+
+# React
+frontend/node_modules/
+node_modules/
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+#Build files
+dist/
+build/
+
+#ai models
+models/
