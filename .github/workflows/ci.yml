@@ -11,11 +11,9 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -32,6 +30,14 @@ jobs:
       - name: Check Python Version
         run: python --version
 
+      - name: Check Code Formatting
+        run: black --check .
+
+      - name: Lint Code
+        run: flake8 .
+
+      - name: Run Tests
+        run: pytest
+
       - name: Verify Project Imports
-        run: |
-          python -m compileall .
+        run: python -m compileall .
