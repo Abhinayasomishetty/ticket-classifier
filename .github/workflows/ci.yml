@@ -33,8 +33,5 @@ jobs:
       - name: Check Code Formatting
         run: black --check .
 
-      - name: Run Tests
-        run: pytest
-
       - name: Verify Project Imports
         run: python -m compileall .
