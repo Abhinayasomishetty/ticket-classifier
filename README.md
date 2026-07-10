@@ -245,7 +245,7 @@ http://localhost:8000/docs
 |----------|------------------------|-------------------------|
 | POST | /auth/register | Register User |
 | POST | /auth/login | Login |
-| POST | /tickets/classify | Classify Ticket |
+| POST | /tickets/create | create Ticket |
 | GET | /tickets | Get Tickets |
 | GET | /docs | Swagger Documentation |
 
